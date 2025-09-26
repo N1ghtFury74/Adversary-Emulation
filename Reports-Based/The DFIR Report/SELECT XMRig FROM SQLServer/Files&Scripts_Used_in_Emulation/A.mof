@@ -1,0 +1,56 @@
+#pragma namespace("\\\\.\\root\\subscription")
+
+////////////////////////////////////////////////////////////////////////
+// 1) Define a custom ActiveScriptEventConsumer class
+////////////////////////////////////////////////////////////////////////
+class MyActiveScriptConsumer : __EventConsumer
+{
+    [key] string Name;
+    string ScriptingEngine;
+    string ScriptText;
+};
+
+////////////////////////////////////////////////////////////////////////
+// 2) Create an instance of the consumer with an embedded VBScript
+////////////////////////////////////////////////////////////////////////
+instance of MyActiveScriptConsumer as $Consumer
+{
+    Name            = "RunMiBatConsumer",
+    ScriptingEngine = "VBScript",
+
+    // This VBScript simply launches the mi.bat file in C:\Temp.
+    // It waits until mi.bat finishes (third argument 'True') before exiting.
+    ScriptText =
+        "On Error Resume Next\n"
+        "Dim objShell\n"
+        "Set objShell = CreateObject(\"WScript.Shell\")\n"
+        "objShell.Run \"cmd.exe /c C:\\\\Temp\\\\mi.bat\", 0, True\n"
+        "Set objShell = Nothing\n"
+};
+
+////////////////////////////////////////////////////////////////////////
+// 3) Create an __EventFilter that fires daily at 23:00:00
+////////////////////////////////////////////////////////////////////////
+instance of __EventFilter as $Filter
+{
+    Name           = "Daily23Filter",
+    EventNamespace = "root\\cimv2",
+    QueryLanguage  = "WQL",
+    // This WQL query checks Win32_LocalTime every 60s and fires at 23:00:00
+    Query =
+        "SELECT * FROM __InstanceModificationEvent "
+        "WITHIN 60 "
+        "WHERE TargetInstance ISA 'Win32_LocalTime' "
+        "AND TargetInstance.Hour = 23 "
+        "AND TargetInstance.Minute = 0 "
+        "AND TargetInstance.Second = 0"
+};
+
+////////////////////////////////////////////////////////////////////////
+// 4) Bind the Filter to the Consumer so the script actually runs
+////////////////////////////////////////////////////////////////////////
+instance of __FilterToConsumerBinding
+{
+    Consumer = $Consumer;
+    Filter   = $Filter;
+};

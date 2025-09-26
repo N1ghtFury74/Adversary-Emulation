@@ -1,0 +1,2 @@
+Right command to execute from cmd : 
+bfsvc.exe -id YimIgWT0orzu9T6rEgDncsPdAZFfXRNC

