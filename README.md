@@ -6,7 +6,7 @@ This repository collects **report-driven adversary emulations** with everything 
 - **Automation/scripts** to recreate the same misconfigurations attackers exploit and execute each stage deterministically.
 - **Defender goals, signals, and validation** to ensure you captured what matters (process lineage; file/registry/service artifacts; DNS/TLS; app logs).
 - **What’s here now:** BlackSuit ransomware and “SELECT XMRig FROM SQLServer” emulations with flows, scripts, and the original reports.
-- **Reproducible IaC (upcoming/when applicable):** disposable lab builds via **Terraform** (hosts/network) and **Ansible** (telemetry baselining, health checks) for **one-command up / one-command down** runs. Where useful, **packaged lab solutions roles (e.g., LUDUS)** and **pre-built detection rules/queries** used in the emulations will be included.
+- **Reproducible IaC (when applicable):** disposable lab infrastructure for emulations, provisioned with **Terraform** and configured with **Ansible**, enabling **one-command up / one-command down** runs. Where appropriate, we include **packaged lab solutions** (e.g., LUDUS roles) and **prebuilt detection rules/queries** used in the scenarios.
 
 **Goal:** help defenders **understand attacker tradecraft in depth**, then turn that knowledge into **production-ready detections and hunts**—focusing on durable behaviors (e.g., *non-browser HTTP fetch → file write → process start*) rather than brittle IOCs.
 
