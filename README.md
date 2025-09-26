@@ -1,13 +1,15 @@
 # Adversary Emulation – Defender-First Walkthrough (with an Offensive Lens)
 
-This repository collects **report-driven adversary emulations** with everything you need to reproduce behaviors safely, study artifacts, and design detections that stand up in production. Each scenario is grounded in **real intrusions from public threat-intel** (original reports included) and paired with:
+This repository curates report-driven adversary emulations that you can run safely end-to-end to study artifacts and build production-ready detections. Each scenario is grounded in real intrusions from public threat-intel (source reports included) and paired with:
 
-- **Step-by-step operator runbooks** a red-teamer would follow—mapped to ATT&CK and annotated with defender checkpoints.
-- **Automation/scripts** to recreate the same misconfigurations attackers exploit and execute each stage deterministically.
-- **Defender goals, signals, and validation** to ensure you captured what matters (process lineage; file/registry/service artifacts; DNS/TLS; app logs).
-- **What’s here now:** BlackSuit ransomware and “SELECT XMRig FROM SQLServer” emulations with flows, scripts, and the original reports.
-- **Reproducible IaC (when applicable):** disposable lab infrastructure for emulations, provisioned with **Terraform** and configured with **Ansible**, enabling **one-command up / one-command down** runs. Where appropriate, we include **packaged lab solutions** (e.g., LUDUS roles) and **prebuilt detection rules/queries** used in the scenarios.
+- **Step-by-step operator runbooks** that mirror realistic tradecraft—mapped to ATT&CK and annotated with defender checkpoints.
+- **Automation and scripts** to reproduce the same preconditions/misconfigurations and execute each stage deterministically.
+- **Defender objectives, signals, and validation** to ensure you capture the critical elements of infrastructure visibility.
+- **Reproducible IaC (when used):** disposable lab infrastructure with one-command up/down, e.g.:
+  - Terraform modules to provision isolated VPC/VNet, subnets, route tables/NAT, SG/NSG, and test hosts (Windows/Linux) with tags for log routing.
+  - Ludus-based infrastructure automation configurations to compose and orchestrate multi-component labs quickly (networking, hosts, and services) for repeatable emulations.
+- **Hunting, detection, and investigation approaches** for the techniques observed in the emulation.
 
-**Goal:** help defenders **understand attacker tradecraft in depth**, then turn that knowledge into **production-ready detections and hunts**—focusing on durable behaviors (e.g., *non-browser HTTP fetch → file write → process start*) rather than brittle IOCs.
+## Purpose
 
-**Audience:** blue teams, detection engineers, DFIR analysts, and purple teams who want realistic, repeatable attack surface—in a form that directly translates to **log sources, queries, and alerts**.
+Enable defenders to understand attack steps in depth—tactics, tooling, and sequencing—then translate that understanding into reliable detections and hunts. The emphasis is on durable behavioral signals (not brittle IOCs) while continually strengthening DFIR and investigation.
